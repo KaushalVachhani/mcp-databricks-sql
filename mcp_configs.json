@@ -1,0 +1,16 @@
+{
+    "mcpServers": {
+        "databricks-mcp-local": {
+          "command": "uv", 
+          "args": [
+              "--directory",
+              "/Users/kaushal.vachhani/Documents/mcp-databricks-sql",
+              "run",
+              "mcp_databricks_sql_server.py"
+          ]
+      }
+    }
+  }
+  
+  
+  
