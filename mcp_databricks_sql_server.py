@@ -25,20 +25,21 @@ async def execute_statement(
     row_limit: int = 10,
 ) -> Dict[str, Any]:
     """
-    Execute a SQL statement.
+    Execute a SQL statement against a Databricks SQL warehouse.
     
     Args:
-        statement: The SQL statement to execute
-        warehouse_id: ID of the SQL warehouse to use
-        catalog: Optional catalog to use
-        schema: Optional schema to use
-        parameters: Optional statement parameters
+        statement: SQL query to execute on the warehouse
+        warehouse_id: Unique identifier of the Databricks SQL warehouse
+        catalog: Optional Unity Catalog name to query against
+        schema: Optional database schema name within the catalog
+        parameters: Optional dictionary of query parameters for parameterized SQL
+        row_limit: Maximum number of rows to return (default: 10)
         
     Returns:
-        Response containing query results
-        
-    Raises:
-        DatabricksAPIError: If the API request fails
+        Dict containing query results, including:
+        - manifest: Query metadata and schema information
+        - result_set: Array of result rows
+        - status: Query execution status
     """    
     request_data = {
         "statement": statement,
