@@ -1,24 +1,37 @@
-from mcp.server.fastmcp import FastMCP
-from dotenv import load_dotenv
-from typing import Optional, Dict, Any
-import requests
+"""
+Databricks SQL Server implementation for MCP.
+
+This module provides functionality to execute SQL statements against a Databricks SQL warehouse
+using the Databricks SQL API.
+"""
+
+# Standard library imports
 import json
 import os
+from typing import Any, Dict, Optional
 
+# Third-party imports
+import requests
+from dotenv import load_dotenv
+
+# Local imports
+from mcp.server.fastmcp import FastMCP
+
+# Load environment variables
 load_dotenv()
 
-# Set your Databricks credentials and warehouse info
-DATABRICKS_HOST = os.getenv("DATABRICKS_HOST")
-DATABRICKS_TOKEN = os.getenv("DATABRICKS_TOKEN")
+# Configuration
+DATABRICKS_HOST: str = os.getenv("DATABRICKS_HOST")
+DATABRICKS_TOKEN: str = os.getenv("DATABRICKS_TOKEN")
+WAREHOUSE_ID: str = "<YOUR_WAREHOUSE_ID>" #todo: add your warehouse id here
 
-warehouse_id="ff5512f3badbbd78"
-
+# Initialize MCP
 mcp = FastMCP("docs")
 
 @mcp.tool()
 async def execute_statement(
     statement: str,
-    warehouse_id: str = warehouse_id,
+    warehouse_id: str = WAREHOUSE_ID,
     catalog: Optional[str] = None,
     schema: Optional[str] = None,
     parameters: Optional[Dict[str, Any]] = None,
@@ -50,6 +63,7 @@ async def execute_statement(
         "row_limit": row_limit,
     }
     
+    # Add optional parameters
     if catalog:
         request_data["catalog"] = catalog
         
@@ -67,11 +81,10 @@ async def execute_statement(
         "Content-Type": "application/json"
     }
 
-    # Send the POST request to execute the statement
+    # Execute request
     response = requests.post(url, headers=headers, data=json.dumps(request_data))
     
     return response.json()
-
 
 if __name__ == "__main__":
     mcp.run(transport="stdio")
